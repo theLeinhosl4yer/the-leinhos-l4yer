@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Leinhos L4yer — IT-Verantwortung, Infrastruktur und sichere digitale Weiterentwicklung." />
+  <meta name="color-scheme" content="dark" />
+  <title>The Leinhos L4yer — Patrick Leinhos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #07111f;
+      --ink-deep: #040a12;
+      --panel: rgba(13, 29, 48, 0.68);
+      --panel-solid: #0d1d30;
+      --line: rgba(180, 220, 240, 0.16);
+      --line-strong: rgba(180, 220, 240, 0.34);
+      --text: #e8f5fa;
+      --muted: #9bb0bd;
+      --ice: #d8f3ff;
+      --cyan: #56cfe1;
+      --blue: #4d7cfe;
+      --lilac: #a78bfa;
+      --success: #66d3b0;
+      --max: 1180px;
+      --radius: 10px;
+      --shadow: 0 30px 100px rgba(0, 0, 0, 0.3);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 82% 12%, rgba(77, 124, 254, 0.12), transparent 28rem),
+        radial-gradient(circle at 10% 70%, rgba(86, 207, 225, 0.07), transparent 30rem),
+        var(--ink-deep);
+      font-family: "Sora", sans-serif;
+      font-weight: 300;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.28;
+      background-image:
+        linear-gradient(rgba(180, 220, 240, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180, 220, 240, 0.035) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(to bottom, black, transparent 92%);
+      z-index: -2;
+    }
+
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    ::selection { background: rgba(86, 207, 225, 0.28); color: white; }
+
+    .skip-link {
+      position: fixed;
+      left: 1rem;
+      top: -5rem;
+      z-index: 100;
+      background: var(--ice);
+      color: var(--ink);
+      padding: 0.7rem 1rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--line);
+      background: rgba(4, 10, 18, 0.78);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      width: min(calc(100% - 2rem), var(--max));
+      min-height: 72px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      width: fit-content;
+      font-weight: 600;
+      letter-spacing: -0.035em;
+    }
+
+    .brand-mark {
+      width: 29px;
+      height: 29px;
+      position: relative;
+      transform: rotate(-7deg);
+    }
+    .brand-mark span {
+      position: absolute;
+      width: 19px;
+      height: 19px;
+      border: 1px solid var(--cyan);
+      background: rgba(86, 207, 225, 0.05);
+    }
+    .brand-mark span:nth-child(1) { top: 1px; left: 1px; }
+    .brand-mark span:nth-child(2) { top: 5px; left: 5px; border-color: var(--blue); }
+    .brand-mark span:nth-child(3) { top: 9px; left: 9px; border-color: var(--lilac); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.7rem;
+    }
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: color 180ms ease;
+    }
+    .nav-links a:hover { color: var(--ice); }
+
+    .lang-switch {
+      justify-self: end;
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 3px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+    .lang-switch button {
+      min-width: 42px;
+      border: 0;
+      border-radius: 3px;
+      padding: 0.42rem 0.55rem;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.72rem;
+    }
+    .lang-switch button[aria-pressed="true"] {
+      color: var(--ink);
+      background: var(--ice);
+      font-weight: 500;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 4px;
+    }
+
+    main { overflow: clip; }
+
+    .hero {
+      width: min(calc(100% - 2rem), var(--max));
+      min-height: calc(100svh - 72px);
+      margin: 0 auto;
+      padding: clamp(4.5rem, 9vw, 8rem) 0 5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
+      align-items: center;
+      gap: clamp(2rem, 7vw, 7rem);
+    }
+
+    .eyebrow, .section-tag, .layer-label, .career-meta {
+      font-family: "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      font-size: 0.68rem;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: var(--cyan);
+      margin-bottom: 1.5rem;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 32px;
+      height: 1px;
+      background: var(--cyan);
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 760px;
+      margin-bottom: 1.7rem;
+      font-size: clamp(3.4rem, 7.3vw, 7.4rem);
+      line-height: 0.94;
+      letter-spacing: -0.075em;
+      font-weight: 600;
+    }
+    h1 .outline {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(216, 243, 255, 0.64);
+      text-stroke: 1px rgba(216, 243, 255, 0.64);
+    }
+    h1 .four { color: var(--cyan); font-family: "IBM Plex Mono", monospace; }
+
+    .hero-copy {
+      max-width: 630px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.35vw, 1.2rem);
+    }
+    .hero-copy strong { color: var(--ice); font-weight: 500; }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2.2rem;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      min-height: 48px;
+      padding: 0 1.2rem;
+      border: 1px solid var(--cyan);
+      border-radius: 5px;
+      color: var(--ink);
+      background: var(--cyan);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: transform 180ms ease, background 180ms ease;
+    }
+    .button:hover { transform: translateY(-2px); background: var(--ice); }
+    .button.secondary { color: var(--ice); background: transparent; border-color: var(--line-strong); }
+    .button.secondary:hover { border-color: var(--ice); }
+    .button svg { width: 16px; height: 16px; }
+
+    .layer-stage {
+      position: relative;
+      height: 510px;
+      perspective: 1000px;
+      isolation: isolate;
+    }
+    .layer-stage::after {
+      content: "";
+      position: absolute;
+      left: 14%;
+      right: 2%;
+      bottom: 3%;
+      height: 26%;
+      background: radial-gradient(ellipse, rgba(77, 124, 254, 0.2), transparent 68%);
+      filter: blur(20px);
+      transform: rotate(-8deg);
+      z-index: -1;
+    }
+
+    .tech-layer {
+      position: absolute;
+      left: 12%;
+      width: 78%;
+      aspect-ratio: 1.35;
+      border: 1px solid var(--layer-color);
+      background: linear-gradient(135deg, rgba(13, 29, 48, 0.68), rgba(7, 17, 31, 0.3));
+      box-shadow: inset 0 0 50px rgba(255,255,255,0.015), var(--shadow);
+      backdrop-filter: blur(6px);
+      transform-style: preserve-3d;
+      transform: rotateX(64deg) rotateZ(-23deg) translate3d(var(--tx, 0), var(--ty, 0), 0);
+      transition: transform 550ms cubic-bezier(.2,.8,.2,1), border-color 220ms ease;
+    }
+    .tech-layer:nth-child(1) { top: 4%; --layer-color: rgba(167, 139, 250, 0.5); z-index: 4; }
+    .tech-layer:nth-child(2) { top: 20%; --layer-color: rgba(77, 124, 254, 0.52); z-index: 3; }
+    .tech-layer:nth-child(3) { top: 36%; --layer-color: rgba(86, 207, 225, 0.48); z-index: 2; }
+    .tech-layer:nth-child(4) { top: 52%; --layer-color: rgba(102, 211, 176, 0.38); z-index: 1; }
+    .tech-layer::before, .tech-layer::after {
+      content: "";
+      position: absolute;
+      inset: 14%;
+      border: 1px dashed rgba(216, 243, 255, 0.13);
+    }
+    .tech-layer::after { inset: 32%; border-style: solid; }
+    .layer-label {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      color: var(--ice);
+    }
+    .layer-index {
+      position: absolute;
+      right: 1rem;
+      bottom: 0.7rem;
+      color: var(--layer-color);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 1.15rem;
+    }
+    .node {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border: 1px solid var(--cyan);
+      border-radius: 50%;
+      background: var(--ink);
+      box-shadow: 0 0 0 5px rgba(86, 207, 225, 0.06);
+    }
+    .node.a { left: 21%; top: 43%; }
+    .node.b { right: 18%; top: 27%; }
+    .node.c { right: 28%; bottom: 18%; }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 2rem;
+      left: 0;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      writing-mode: vertical-rl;
+    }
+
+    .section {
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+      padding: clamp(5rem, 10vw, 9rem) 0;
+      border-top: 1px solid var(--line);
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: 0.7fr 1.3fr;
+      gap: clamp(2rem, 7vw, 7rem);
+      margin-bottom: clamp(3.5rem, 7vw, 6rem);
+    }
+    .section-tag { color: var(--cyan); padding-top: 0.7rem; }
+    .section h2 {
+      max-width: 820px;
+      margin-bottom: 0;
+      font-size: clamp(2.2rem, 4.8vw, 5rem);
+      line-height: 1.08;
+      letter-spacing: -0.055em;
+      font-weight: 500;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 0.7fr 1.3fr;
+      gap: clamp(2rem, 7vw, 7rem);
+    }
+    .profile-aside {
+      position: relative;
+      padding: 1.4rem 0 0 1.5rem;
+      border-left: 1px solid var(--blue);
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.74rem;
+    }
+    .profile-aside strong { display: block; margin-bottom: 0.5rem; color: var(--ice); font-family: "Sora", sans-serif; font-size: 1rem; }
+    .profile-body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+    .principle {
+      min-height: 210px;
+      padding: clamp(1.5rem, 3vw, 2.3rem);
+      background: var(--ink-deep);
+      transition: background 220ms ease;
+    }
+    .principle:hover { background: var(--panel-solid); }
+    .principle .symbol { display: block; margin-bottom: 2.5rem; color: var(--cyan); font-family: "IBM Plex Mono", monospace; }
+    .principle h3 { margin-bottom: 0.7rem; font-size: 1.1rem; font-weight: 500; }
+    .principle p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .competence-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1rem;
+    }
+    .competence-card {
+      position: relative;
+      grid-column: span 4;
+      min-height: 270px;
+      padding: 2rem;
+      border: 1px solid var(--line);
+      background: rgba(13, 29, 48, 0.28);
+      overflow: hidden;
+      transition: border-color 220ms ease, transform 220ms ease;
+    }
+    .competence-card:nth-child(1), .competence-card:nth-child(4) { grid-column: span 5; }
+    .competence-card:nth-child(2), .competence-card:nth-child(3) { grid-column: span 7; }
+    .competence-card:hover { border-color: var(--line-strong); transform: translateY(-3px); }
+    .competence-card::after {
+      content: "";
+      position: absolute;
+      right: -55px;
+      bottom: -55px;
+      width: 130px;
+      height: 130px;
+      border: 1px solid rgba(86, 207, 225, 0.14);
+      transform: rotate(28deg);
+    }
+    .card-code { color: var(--cyan); font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; }
+    .competence-card h3 { margin: 4rem 0 0.8rem; font-size: clamp(1.25rem, 2vw, 1.65rem); font-weight: 500; letter-spacing: -0.03em; }
+    .competence-card p { max-width: 520px; margin-bottom: 0; color: var(--muted); font-size: 0.88rem; }
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.3rem; }
+    .tech-tags span { padding: 0.25rem 0.55rem; border: 1px solid var(--line); color: var(--ice); font-family: "IBM Plex Mono", monospace; font-size: 0.62rem; }
+
+    .career-list { margin-left: calc(35% + 1rem); border-left: 1px solid var(--line-strong); }
+    .career-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 0.7fr 1.3fr;
+      gap: 2rem;
+      padding: 2rem 0 2rem 2.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .career-item::before {
+      content: "";
+      position: absolute;
+      left: -5px;
+      top: 2.65rem;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--ink-deep);
+      border: 1px solid var(--cyan);
+    }
+    .career-meta { color: var(--muted); }
+    .career-item:first-child .career-meta { color: var(--cyan); }
+    .career-item h3 { margin-bottom: 0.35rem; font-size: 1.2rem; font-weight: 500; }
+    .career-item p { margin-bottom: 0; color: var(--muted); font-size: 0.85rem; }
+
+    .final-note {
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+      padding: 5rem 0 2rem;
+      border-top: 1px solid var(--line);
+    }
+    .final-note-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 2rem;
+    }
+    .final-note h2 { max-width: 650px; margin-bottom: 0; font-size: clamp(2rem, 4vw, 4rem); line-height: 1.08; letter-spacing: -0.055em; font-weight: 500; }
+    .status { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 5px rgba(102, 211, 176, 0.08); }
+
+    footer {
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+      padding: 2rem 0 3rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.65rem;
+    }
+    footer a { text-decoration: none; }
+    footer a:hover { color: var(--ice); }
+
+    [data-lang-content] { display: none; }
+    html[data-language="de"] [data-lang-content="de"],
+    html[data-language="en"] [data-lang-content="en"] { display: contents; }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 700ms ease, transform 700ms ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 900px) {
+      .nav { grid-template-columns: 1fr auto; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding-top: 5.5rem; }
+      .layer-stage { height: 430px; width: min(100%, 560px); margin: 0 auto; }
+      .scroll-cue { display: none; }
+      .section-head, .profile-grid { grid-template-columns: 1fr; }
+      .profile-aside { max-width: 440px; }
+      .competence-card, .competence-card:nth-child(n) { grid-column: span 6; }
+      .career-list { margin-left: 0; }
+      .career-item { grid-template-columns: 0.7fr 1.3fr; }
+    }
+
+    @media (max-width: 620px) {
+      .nav { min-height: 64px; }
+      .brand { font-size: 0.84rem; }
+      .brand-mark { width: 25px; height: 25px; transform: scale(0.85) rotate(-7deg); transform-origin: left center; }
+      h1 { font-size: clamp(3.1rem, 18vw, 5rem); }
+      .hero { min-height: auto; padding-top: 4rem; }
+      .layer-stage { height: 330px; margin-top: 0.5rem; }
+      .tech-layer { left: 7%; width: 86%; }
+      .section { padding: 5rem 0; }
+      .profile-body { grid-template-columns: 1fr; }
+      .principle { min-height: auto; }
+      .principle .symbol { margin-bottom: 1.8rem; }
+      .competence-card, .competence-card:nth-child(n) { grid-column: 1 / -1; min-height: 250px; }
+      .career-list { border-left: 0; }
+      .career-item { grid-template-columns: 1fr; gap: 0.7rem; padding-left: 1.5rem; border-left: 1px solid var(--line-strong); }
+      .career-item::before { left: -5px; }
+      .final-note-inner { align-items: flex-start; flex-direction: column; }
+      footer { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content"><span data-lang-content="de">Zum Inhalt</span><span data-lang-content="en">Skip to content</span></a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a class="brand" href="#top" aria-label="The Leinhos L4yer — Startseite">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>The Leinhos L4yer</span>
+      </a>
+      <div class="nav-links">
+        <a href="#profil"><span data-lang-content="de">Profil</span><span data-lang-content="en">Profile</span></a>
+        <a href="#kompetenzen"><span data-lang-content="de">Kompetenzen</span><span data-lang-content="en">Capabilities</span></a>
+        <a href="#werdegang"><span data-lang-content="de">Werdegang</span><span data-lang-content="en">Experience</span></a>
+      </div>
+      <div class="lang-switch" aria-label="Sprache auswählen">
+        <button type="button" data-lang="de" aria-pressed="true">DE</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="content">
+    <section class="hero" id="top">
+      <div class="hero-content reveal">
+        <div data-lang-content="de">
+          <p class="eyebrow">IT-Verantwortung · Hannover</p>
+          <h1>Systeme mit <span class="outline">Substanz.</span><br />Denken in L<span class="four">4</span>yern.</h1>
+          <p class="hero-copy">Ich bin <strong>Patrick Leinhos</strong>. Als IT-Verantwortlicher verbinde ich stabilen Betrieb, sichere Infrastruktur und strategische Weiterentwicklung — pragmatisch, nachvollziehbar und mit Blick auf das Ganze.</p>
+          <div class="hero-actions">
+            <a class="button" href="#profil">Profil ansehen
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="button secondary" href="https://www.linkedin.com/in/patrick-leinhos-77942a231" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </div>
+        </div>
+        <div data-lang-content="en">
+          <p class="eyebrow">IT responsibility · Hanover</p>
+          <h1>Systems with <span class="outline">substance.</span><br />Thinking in l<span class="four">4</span>yers.</h1>
+          <p class="hero-copy">I’m <strong>Patrick Leinhos</strong>. As an IT lead, I connect reliable operations, secure infrastructure and strategic development — pragmatic, transparent and always mindful of the bigger picture.</p>
+          <div class="hero-actions">
+            <a class="button" href="#profil">View profile
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="button secondary" href="https://www.linkedin.com/in/patrick-leinhos-77942a231" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-stage reveal" aria-label="Abstraktes Modell einer mehrschichtigen IT-Architektur">
+        <div class="tech-layer"><span class="layer-label">Strategy</span><span class="layer-index">L4</span><i class="node a"></i><i class="node c"></i></div>
+        <div class="tech-layer"><span class="layer-label">Security</span><span class="layer-index">L3</span><i class="node b"></i></div>
+        <div class="tech-layer"><span class="layer-label">Infrastructure</span><span class="layer-index">L2</span><i class="node a"></i><i class="node b"></i></div>
+        <div class="tech-layer"><span class="layer-label">Operations</span><span class="layer-index">L1</span><i class="node c"></i></div>
+      </div>
+      <span class="scroll-cue" aria-hidden="true">SCROLL / EXPLORE</span>
+    </section>
+
+    <section class="section" id="profil">
+      <div class="section-head reveal">
+        <div class="section-tag">L4 / Profil</div>
+        <div data-lang-content="de"><h2>IT nicht als Einzeldisziplin, sondern als zusammenhängendes System.</h2></div>
+        <div data-lang-content="en"><h2>IT not as a collection of silos, but as one connected system.</h2></div>
+      </div>
+
+      <div class="profile-grid">
+        <aside class="profile-aside reveal">
+          <div data-lang-content="de"><strong>Mein Ansatz</strong>Betrieb verstehen.<br />Abhängigkeiten bewerten.<br />Entscheidungen tragfähig machen.</div>
+          <div data-lang-content="en"><strong>My approach</strong>Understand operations.<br />Assess dependencies.<br />Make decisions sustainable.</div>
+        </aside>
+        <div class="profile-body reveal">
+          <article class="principle">
+            <span class="symbol">{ 01 }</span>
+            <div data-lang-content="de"><h3>Verantwortung übernehmen</h3><p>Technische Entscheidungen an Geschäftsbetrieb, Risiko und Wiederherstellbarkeit ausrichten.</p></div>
+            <div data-lang-content="en"><h3>Take ownership</h3><p>Align technical decisions with business operations, risk and recoverability.</p></div>
+          </article>
+          <article class="principle">
+            <span class="symbol">{ 02 }</span>
+            <div data-lang-content="de"><h3>Komplexität strukturieren</h3><p>Zusammenhänge sichtbar machen und Lösungen nachvollziehbar dokumentieren.</p></div>
+            <div data-lang-content="en"><h3>Structure complexity</h3><p>Make relationships visible and document solutions so they remain understandable.</p></div>
+          </article>
+          <article class="principle">
+            <span class="symbol">{ 03 }</span>
+            <div data-lang-content="de"><h3>Sicherheit integrieren</h3><p>Schutz nicht als Zusatzprodukt, sondern als festen Bestandteil von Betrieb und Architektur denken.</p></div>
+            <div data-lang-content="en"><h3>Integrate security</h3><p>Treat protection not as an add-on, but as an integral part of operations and architecture.</p></div>
+          </article>
+          <article class="principle">
+            <span class="symbol">{ 04 }</span>
+            <div data-lang-content="de"><h3>Nachhaltig verbessern</h3><p>Pragmatisch starten, sauber verifizieren und Lösungen langfristig wartbar halten.</p></div>
+            <div data-lang-content="en"><h3>Improve sustainably</h3><p>Start pragmatically, verify thoroughly and keep solutions maintainable over time.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="kompetenzen">
+      <div class="section-head reveal">
+        <div class="section-tag">L3–L1 / Kompetenzfelder</div>
+        <div data-lang-content="de"><h2>Zwischen Tagesgeschäft und technischer Richtung.</h2></div>
+        <div data-lang-content="en"><h2>Connecting day-to-day operations with technical direction.</h2></div>
+      </div>
+
+      <div class="competence-grid">
+        <article class="competence-card reveal">
+          <span class="card-code">CAPABILITY / 01</span>
+          <div data-lang-content="de"><h3>IT-Betrieb & Verantwortung</h3><p>Priorisierung, technische Bewertung und Weiterentwicklung eines stabilen, dokumentierbaren IT-Betriebs.</p></div>
+          <div data-lang-content="en"><h3>IT operations & ownership</h3><p>Prioritisation, technical evaluation and development of stable, well-documented IT operations.</p></div>
+          <div class="tech-tags"><span>OPERATIONS</span><span>RECOVERY</span><span>DOCUMENTATION</span></div>
+        </article>
+        <article class="competence-card reveal">
+          <span class="card-code">CAPABILITY / 02</span>
+          <div data-lang-content="de"><h3>Infrastruktur & Netzwerke</h3><p>Praxisorientierte Arbeit an Microsoft-Umgebungen, Netzwerken, Cloud-Diensten und zuverlässigen technischen Grundlagen.</p></div>
+          <div data-lang-content="en"><h3>Infrastructure & networks</h3><p>Hands-on work across Microsoft environments, networks, cloud services and reliable technical foundations.</p></div>
+          <div class="tech-tags"><span>MICROSOFT</span><span>AZURE</span><span>NETWORKING</span><span>LINUX</span></div>
+        </article>
+        <article class="competence-card reveal">
+          <span class="card-code">CAPABILITY / 03</span>
+          <div data-lang-content="de"><h3>Sicherer Systembetrieb</h3><p>Risikobewusste Architektur, Berechtigungen, Monitoring und mehrschichtige Schutzmaßnahmen als Teil des Betriebs.</p></div>
+          <div data-lang-content="en"><h3>Secure systems operations</h3><p>Risk-aware architecture, permissions, monitoring and layered safeguards as part of everyday operations.</p></div>
+          <div class="tech-tags"><span>IDENTITY</span><span>MONITORING</span><span>DEFENSE IN DEPTH</span></div>
+        </article>
+        <article class="competence-card reveal">
+          <span class="card-code">CAPABILITY / 04</span>
+          <div data-lang-content="de"><h3>Automatisierung & KI</h3><p>Wiederkehrende Abläufe vereinfachen, Wissen zugänglich machen und Entscheidungen technisch fundiert vorbereiten.</p></div>
+          <div data-lang-content="en"><h3>Automation & AI</h3><p>Simplify repetitive workflows, make knowledge accessible and prepare decisions with sound technical context.</p></div>
+          <div class="tech-tags"><span>AUTOMATION</span><span>AI</span><span>PROCESS DESIGN</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="werdegang">
+      <div class="section-head reveal">
+        <div class="section-tag">Route / Erfahrung</div>
+        <div data-lang-content="de"><h2>Vom Support über Consulting zur ganzheitlichen IT-Verantwortung.</h2></div>
+        <div data-lang-content="en"><h2>From support and consulting to end-to-end IT ownership.</h2></div>
+      </div>
+
+      <div class="career-list">
+        <article class="career-item reveal">
+          <div class="career-meta"><span data-lang-content="de">Aktuelle Rolle</span><span data-lang-content="en">Current role</span></div>
+          <div><h3>ZIEGRA Eismaschinen GmbH</h3><p><span data-lang-content="de">IT-Verantwortlicher</span><span data-lang-content="en">IT Lead</span></p></div>
+        </article>
+        <article class="career-item reveal">
+          <div class="career-meta"><span data-lang-content="de">Administration</span><span data-lang-content="en">Administration</span></div>
+          <div><h3>AGL Activ Services GmbH</h3><p><span data-lang-content="de">IT-Systemadministrator — Netzwerk & Security</span><span data-lang-content="en">IT Systems Administrator — Network & Security</span></p></div>
+        </article>
+        <article class="career-item reveal">
+          <div class="career-meta"><span data-lang-content="de">Consulting</span><span data-lang-content="en">Consulting</span></div>
+          <div><h3>comNET Gesellschaft für Kommunikation & Netzwerke mbH</h3><p><span data-lang-content="de">Junior IT Consulting — Netzwerk & Security</span><span data-lang-content="en">Junior IT Consultant — Network & Security</span></p></div>
+        </article>
+        <article class="career-item reveal">
+          <div class="career-meta"><span data-lang-content="de">Support</span><span data-lang-content="en">Support</span></div>
+          <div><h3>TORUTEC GmbH</h3><p><span data-lang-content="de">Second-Level-Support</span><span data-lang-content="en">Second-level support</span></p></div>
+        </article>
+        <article class="career-item reveal">
+          <div class="career-meta"><span data-lang-content="de">Fundament</span><span data-lang-content="en">Foundation</span></div>
+          <div><h3>Oskar-von-Miller-Schule Kassel</h3><p><span data-lang-content="de">Fachinformatiker für Systemintegration</span><span data-lang-content="en">IT Specialist for Systems Integration</span></p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="final-note reveal">
+      <div class="final-note-inner">
+        <div data-lang-content="de"><h2>Technik betreiben. Risiken verstehen. Entwicklung möglich machen.</h2></div>
+        <div data-lang-content="en"><h2>Run technology. Understand risk. Enable progress.</h2></div>
+        <div class="status"><span class="status-dot"></span><span data-lang-content="de">Portfolio · Version 01</span><span data-lang-content="en">Portfolio · Version 01</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© <span id="year"></span> Patrick Leinhos</span>
+    <span>THE LEINHOS L4YER / BUILT WITH INTENT</span>
+    <a href="https://www.linkedin.com/in/patrick-leinhos-77942a231" target="_blank" rel="noopener noreferrer">LINKEDIN ↗</a>
+  </footer>
+
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const langButtons = document.querySelectorAll('[data-lang]');
+      const titles = {
+        de: 'The Leinhos L4yer — Patrick Leinhos',
+        en: 'The Leinhos L4yer — Patrick Leinhos'
+      };
+
+      function setLanguage(lang) {
+        root.dataset.language = lang;
+        root.lang = lang;
+        document.title = titles[lang];
+        langButtons.forEach(button => {
+          button.setAttribute('aria-pressed', String(button.dataset.lang === lang));
+        });
+      }
+
+      langButtons.forEach(button => button.addEventListener('click', () => setLanguage(button.dataset.lang)));
+      setLanguage('de');
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      const revealItems = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        revealItems.forEach(item => observer.observe(item));
+      } else {
+        revealItems.forEach(item => item.classList.add('visible'));
+      }
+
+      const stage = document.querySelector('.layer-stage');
+      const layers = [...document.querySelectorAll('.tech-layer')];
+      const canMove = window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (stage && canMove) {
+        stage.addEventListener('pointermove', event => {
+          const rect = stage.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          layers.forEach((layer, index) => {
+            const depth = (layers.length - index) * 5;
+            layer.style.setProperty('--tx', `${x * depth}px`);
+            layer.style.setProperty('--ty', `${y * depth}px`);
+          });
+        });
+        stage.addEventListener('pointerleave', () => {
+          layers.forEach(layer => {
+            layer.style.setProperty('--tx', '0px');
+            layer.style.setProperty('--ty', '0px');
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
