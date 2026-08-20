@@ -4,11 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="The Leinhos L4yer — IT-Verantwortung, Infrastruktur und sichere digitale Weiterentwicklung." />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="color-scheme" content="dark" />
   <title>The Leinhos L4yer — Patrick Leinhos</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --ink: #07111f;
@@ -39,7 +38,7 @@
         radial-gradient(circle at 82% 12%, rgba(77, 124, 254, 0.12), transparent 28rem),
         radial-gradient(circle at 10% 70%, rgba(86, 207, 225, 0.07), transparent 30rem),
         var(--ink-deep);
-      font-family: "Sora", sans-serif;
+      font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       font-weight: 300;
       line-height: 1.65;
       overflow-x: hidden;
@@ -153,7 +152,7 @@
       color: var(--muted);
       background: transparent;
       cursor: pointer;
-      font-family: "IBM Plex Mono", monospace;
+      font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
       font-size: 0.72rem;
     }
     .lang-switch button[aria-pressed="true"] {
@@ -181,7 +180,7 @@
     }
 
     .eyebrow, .section-tag, .layer-label, .career-meta {
-      font-family: "IBM Plex Mono", monospace;
+      font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
       text-transform: uppercase;
       letter-spacing: 0.13em;
       font-size: 0.68rem;
@@ -215,7 +214,7 @@
       -webkit-text-stroke: 1px rgba(216, 243, 255, 0.64);
       text-stroke: 1px rgba(216, 243, 255, 0.64);
     }
-    h1 .four { color: var(--cyan); font-family: "IBM Plex Mono", monospace; }
+    h1 .four { color: var(--cyan); font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace; }
 
     .hero-copy {
       max-width: 630px;
@@ -306,7 +305,7 @@
       right: 1rem;
       bottom: 0.7rem;
       color: var(--layer-color);
-      font-family: "IBM Plex Mono", monospace;
+      font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
       font-size: 1.15rem;
     }
     .node {
@@ -327,7 +326,7 @@
       bottom: 2rem;
       left: 0;
       color: var(--muted);
-      font-family: "IBM Plex Mono", monospace;
+      font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
       font-size: 0.66rem;
       letter-spacing: 0.08em;
       writing-mode: vertical-rl;
@@ -365,10 +364,10 @@
       padding: 1.4rem 0 0 1.5rem;
       border-left: 1px solid var(--blue);
       color: var(--muted);
-      font-family: "IBM Plex Mono", monospace;
+      font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
       font-size: 0.74rem;
     }
-    .profile-aside strong { display: block; margin-bottom: 0.5rem; color: var(--ice); font-family: "Sora", sans-serif; font-size: 1rem; }
+    .profile-aside strong { display: block; margin-bottom: 0.5rem; color: var(--ice); font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 1rem; }
     .profile-body {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -383,7 +382,7 @@
       transition: background 220ms ease;
     }
     .principle:hover { background: var(--panel-solid); }
-    .principle .symbol { display: block; margin-bottom: 2.5rem; color: var(--cyan); font-family: "IBM Plex Mono", monospace; }
+    .principle .symbol { display: block; margin-bottom: 2.5rem; color: var(--cyan); font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace; }
     .principle h3 { margin-bottom: 0.7rem; font-size: 1.1rem; font-weight: 500; }
     .principle p { margin: 0; color: var(--muted); font-size: 0.86rem; }
 
@@ -415,11 +414,11 @@
       border: 1px solid rgba(86, 207, 225, 0.14);
       transform: rotate(28deg);
     }
-    .card-code { color: var(--cyan); font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; }
+    .card-code { color: var(--cyan); font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace; font-size: 0.7rem; }
     .competence-card h3 { margin: 4rem 0 0.8rem; font-size: clamp(1.25rem, 2vw, 1.65rem); font-weight: 500; letter-spacing: -0.03em; }
     .competence-card p { max-width: 520px; margin-bottom: 0; color: var(--muted); font-size: 0.88rem; }
     .tech-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.3rem; }
-    .tech-tags span { padding: 0.25rem 0.55rem; border: 1px solid var(--line); color: var(--ice); font-family: "IBM Plex Mono", monospace; font-size: 0.62rem; }
+    .tech-tags span { padding: 0.25rem 0.55rem; border: 1px solid var(--line); color: var(--ice); font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace; font-size: 0.62rem; }
 
     .career-list { margin-left: calc(35% + 1rem); border-left: 1px solid var(--line-strong); }
     .career-item {
@@ -459,7 +458,7 @@
       gap: 2rem;
     }
     .final-note h2 { max-width: 650px; margin-bottom: 0; font-size: clamp(2rem, 4vw, 4rem); line-height: 1.08; letter-spacing: -0.055em; font-weight: 500; }
-    .status { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; }
+    .status { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace; font-size: 0.68rem; }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 5px rgba(102, 211, 176, 0.08); }
 
     footer {
@@ -470,7 +469,7 @@
       justify-content: space-between;
       gap: 1rem;
       color: var(--muted);
-      font-family: "IBM Plex Mono", monospace;
+      font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
       font-size: 0.65rem;
     }
     footer a { text-decoration: none; }
