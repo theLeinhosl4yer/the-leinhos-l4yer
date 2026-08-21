@@ -27,6 +27,7 @@
       const openContactButtons = document.querySelectorAll('[data-open-contact]');
       const closeContactButton = document.querySelector('[data-close-contact]');
       let turnstileWidgetId = null;
+      let turnstileToken = '';
 
       function openContact() {
         if (!contactDialog || contactDialog.open) return;
@@ -39,8 +40,19 @@
             sitekey: '0x4AAAAAAEXipTWIHWrSI09M',
             theme: 'dark',
             action: 'contact',
-            responseField: true,
-            responseFieldName: 'turnstile_token'
+            responseField: false,
+            callback: token => {
+              turnstileToken = token;
+              formStatus.textContent = '';
+              formStatus.className = 'form-status';
+            },
+            'expired-callback': () => { turnstileToken = ''; },
+            'error-callback': () => {
+              turnstileToken = '';
+              const lang = root.dataset.language || 'de';
+              formStatus.textContent = lang === 'de' ? 'Die Bot-Prüfung konnte nicht geladen werden.' : 'The bot check could not be loaded.';
+              formStatus.className = 'form-status error';
+            }
           });
           return true;
         };
@@ -82,6 +94,7 @@
 
           const formData = new FormData(contactForm);
           const payload = Object.fromEntries(formData.entries());
+          payload.turnstile_token = turnstileToken || (window.turnstile && turnstileWidgetId !== null ? window.turnstile.getResponse(turnstileWidgetId) : '');
           if (!payload.turnstile_token) {
             formStatus.textContent = lang === 'de' ? 'Bitte schließe die Bot-Prüfung ab.' : 'Please complete the bot check.';
             formStatus.classList.add('error');
@@ -102,6 +115,7 @@
 
             contactForm.reset();
             startedField.value = String(Date.now());
+            turnstileToken = '';
             if (window.turnstile && turnstileWidgetId !== null) window.turnstile.reset(turnstileWidgetId);
             formStatus.textContent = lang === 'de' ? 'Nachricht wurde übermittelt. Vielen Dank.' : 'Your message has been sent. Thank you.';
             formStatus.classList.add('success');
@@ -111,6 +125,7 @@
               ? (retry ? 'Zu viele Anfragen. Bitte versuche es später erneut.' : 'Die Nachricht konnte nicht übermittelt werden. Bitte versuche es später erneut.')
               : (retry ? 'Too many requests. Please try again later.' : 'The message could not be sent. Please try again later.');
             formStatus.classList.add('error');
+            turnstileToken = '';
             if (window.turnstile && turnstileWidgetId !== null) window.turnstile.reset(turnstileWidgetId);
           } finally {
             submitButton.disabled = false;
