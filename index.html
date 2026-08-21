@@ -8,6 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="color-scheme" content="dark" />
   <title>The Leinhos L4yer — Patrick Leinhos</title>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
   <style>
     :root {
       --ink: #07111f;
@@ -445,6 +446,96 @@
     .career-item h3 { margin-bottom: 0.35rem; font-size: 1.2rem; font-weight: 500; }
     .career-item p { margin-bottom: 0; color: var(--muted); font-size: 0.85rem; }
 
+    .contact-trigger {
+      border: 0;
+      padding: 0;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: color 180ms ease;
+    }
+    .contact-trigger:hover { color: var(--ice); }
+    .contact-dialog {
+      width: min(920px, calc(100% - 2rem));
+      max-height: calc(100svh - 2rem);
+      padding: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--text);
+      background: rgba(4, 10, 18, 0.98);
+      box-shadow: 0 36px 120px rgba(0, 0, 0, 0.72);
+      overflow: auto;
+    }
+    .contact-dialog::backdrop { background: rgba(1, 5, 10, 0.8); backdrop-filter: blur(9px); }
+    .dialog-head {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      padding: 1.5rem clamp(1.4rem, 3vw, 2.4rem);
+      border-bottom: 1px solid var(--line);
+      background: rgba(4, 10, 18, 0.96);
+      backdrop-filter: blur(18px);
+    }
+    .dialog-head h2 { margin: 0.25rem 0 0; font-size: clamp(1.55rem, 3vw, 2.4rem); line-height: 1.1; letter-spacing: -0.045em; font-weight: 500; }
+    .dialog-close {
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      color: var(--ice);
+      background: transparent;
+      cursor: pointer;
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+    .dialog-close:hover { border-color: var(--cyan); color: var(--cyan); }
+    body.modal-open { overflow: hidden; }
+    .contact-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.15rem;
+      padding: clamp(1.4rem, 3vw, 2.4rem);
+      border: 1px solid var(--line);
+      background: rgba(13, 29, 48, 0.28);
+    }
+    .form-field { display: grid; gap: 0.48rem; }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-field label {
+      color: var(--ice);
+      font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      padding: 0.85rem 0.9rem;
+      color: var(--text);
+      background: rgba(4, 10, 18, 0.78);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .form-field textarea { min-height: 165px; resize: vertical; }
+    .form-field input:focus,
+    .form-field textarea:focus { border-color: var(--cyan); outline: 1px solid var(--cyan); outline-offset: 1px; }
+    .form-field small, .privacy-note { color: var(--muted); font-size: 0.72rem; }
+    .honeypot { position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
+    .turnstile-wrap { min-height: 70px; }
+    .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+    .contact-form button[disabled] { opacity: 0.62; cursor: wait; transform: none; }
+    .form-status { min-height: 1.5em; margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .form-status.success { color: var(--success); }
+    .form-status.error { color: #ff9b9b; }
+
     .final-note {
       width: min(calc(100% - 2rem), var(--max));
       margin: 0 auto;
@@ -508,6 +599,8 @@
       .principle { min-height: auto; }
       .principle .symbol { margin-bottom: 1.8rem; }
       .competence-card, .competence-card:nth-child(n) { grid-column: 1 / -1; min-height: 250px; }
+      .contact-form { grid-template-columns: 1fr; }
+      .form-field.full { grid-column: 1; }
       .career-list { border-left: 0; }
       .career-item { grid-template-columns: 1fr; gap: 0.7rem; padding-left: 1.5rem; border-left: 1px solid var(--line-strong); }
       .career-item::before { left: -5px; }
@@ -535,6 +628,7 @@
         <a href="#profil"><span data-lang-content="de">Profil</span><span data-lang-content="en">Profile</span></a>
         <a href="#kompetenzen"><span data-lang-content="de">Kompetenzen</span><span data-lang-content="en">Capabilities</span></a>
         <a href="#werdegang"><span data-lang-content="de">Werdegang</span><span data-lang-content="en">Experience</span></a>
+        <button class="contact-trigger" type="button" data-open-contact><span data-lang-content="de">Kontakt</span><span data-lang-content="en">Contact</span></button>
       </div>
       <div class="lang-switch" aria-label="Sprache auswählen">
         <button type="button" data-lang="de" aria-pressed="true">DE</button>
@@ -555,6 +649,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a class="button secondary" href="https://www.linkedin.com/in/patrick-leinhos-77942a231" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <button class="button secondary" type="button" data-open-contact>Kontakt</button>
           </div>
         </div>
         <div data-lang-content="en">
@@ -566,6 +661,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a class="button secondary" href="https://www.linkedin.com/in/patrick-leinhos-77942a231" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <button class="button secondary" type="button" data-open-contact>Contact</button>
           </div>
         </div>
       </div>
@@ -682,6 +778,57 @@
       </div>
     </section>
 
+    <dialog class="contact-dialog" id="contact-dialog" aria-labelledby="contact-dialog-title">
+      <div class="dialog-head">
+        <div>
+          <div class="section-tag">Interface / Kontakt</div>
+          <div data-lang-content="de"><h2 id="contact-dialog-title">Eine gute technische Unterhaltung beginnt mit Kontext.</h2></div>
+          <div data-lang-content="en"><h2>A useful technical conversation starts with context.</h2></div>
+        </div>
+        <button class="dialog-close" type="button" data-close-contact aria-label="Kontaktformular schließen">×</button>
+      </div>
+
+      <form class="contact-form" id="contact-form" action="/api/contact" method="post" novalidate>
+          <div class="form-field">
+            <label for="contact-name"><span data-lang-content="de">Name</span><span data-lang-content="en">Name</span></label>
+            <input id="contact-name" name="name" type="text" maxlength="100" autocomplete="name" required />
+          </div>
+          <div class="form-field">
+            <label for="contact-email"><span data-lang-content="de">E-Mail</span><span data-lang-content="en">Email</span></label>
+            <input id="contact-email" name="email" type="email" maxlength="254" autocomplete="email" inputmode="email" required />
+          </div>
+          <div class="form-field">
+            <label for="contact-company"><span data-lang-content="de">Unternehmen · optional</span><span data-lang-content="en">Company · optional</span></label>
+            <input id="contact-company" name="company" type="text" maxlength="120" autocomplete="organization" />
+          </div>
+          <div class="form-field">
+            <label for="contact-subject"><span data-lang-content="de">Betreff</span><span data-lang-content="en">Subject</span></label>
+            <input id="contact-subject" name="subject" type="text" maxlength="140" required />
+          </div>
+          <div class="form-field full">
+            <label for="contact-message"><span data-lang-content="de">Nachricht</span><span data-lang-content="en">Message</span></label>
+            <textarea id="contact-message" name="message" minlength="20" maxlength="4000" required></textarea>
+            <small><span data-lang-content="de">20–4000 Zeichen. Bitte keine vertraulichen Zugangsdaten übermitteln.</span><span data-lang-content="en">20–4000 characters. Do not submit confidential credentials.</span></small>
+          </div>
+          <div class="honeypot" aria-hidden="true">
+            <label for="contact-website">Website</label>
+            <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <input type="hidden" name="form_started" id="form-started" value="" />
+          <div class="form-field full turnstile-wrap">
+            <div id="turnstile-container"></div>
+          </div>
+          <p class="privacy-note form-field full">
+            <span data-lang-content="de">Mit dem Absenden werden die Angaben zur Bearbeitung der Anfrage per E-Mail übermittelt. Es erfolgt keine zusätzliche Speicherung in einer eigenen Formulardatenbank.</span>
+            <span data-lang-content="en">When submitted, the information is sent by email to process your enquiry. It is not additionally stored in a dedicated form database.</span>
+          </p>
+          <div class="form-actions form-field full">
+            <button class="button" type="submit" id="contact-submit"><span data-lang-content="de">Nachricht senden</span><span data-lang-content="en">Send message</span></button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </div>
+      </form>
+    </dialog>
+
     <section class="final-note reveal">
       <div class="final-note-inner">
         <div data-lang-content="de"><h2>Technik betreiben. Risiken verstehen. Entwicklung möglich machen.</h2></div>
@@ -718,6 +865,105 @@
       langButtons.forEach(button => button.addEventListener('click', () => setLanguage(button.dataset.lang)));
       setLanguage('de');
       document.getElementById('year').textContent = new Date().getFullYear();
+
+      const contactDialog = document.getElementById('contact-dialog');
+      const contactForm = document.getElementById('contact-form');
+      const formStatus = document.getElementById('form-status');
+      const submitButton = document.getElementById('contact-submit');
+      const startedField = document.getElementById('form-started');
+      const openContactButtons = document.querySelectorAll('[data-open-contact]');
+      const closeContactButton = document.querySelector('[data-close-contact]');
+      let turnstileWidgetId = null;
+
+      function openContact() {
+        if (!contactDialog || contactDialog.open) return;
+        contactDialog.showModal();
+        document.body.classList.add('modal-open');
+        if (startedField) startedField.value = String(Date.now());
+        const renderTurnstile = () => {
+          if (!window.turnstile || turnstileWidgetId !== null) return false;
+          turnstileWidgetId = window.turnstile.render('#turnstile-container', {
+            sitekey: '0x4AAAAAAEXipTWIHWrSI09M',
+            theme: 'dark',
+            action: 'contact',
+            responseField: true,
+            responseFieldName: 'turnstile_token'
+          });
+          return true;
+        };
+        if (!renderTurnstile()) {
+          let attempts = 0;
+          const waitForTurnstile = window.setInterval(() => {
+            attempts += 1;
+            if (renderTurnstile() || attempts >= 40) window.clearInterval(waitForTurnstile);
+          }, 100);
+        }
+        window.setTimeout(() => document.getElementById('contact-name')?.focus(), 60);
+      }
+
+      function closeContact() {
+        if (contactDialog?.open) contactDialog.close();
+      }
+
+      openContactButtons.forEach(button => button.addEventListener('click', openContact));
+      closeContactButton?.addEventListener('click', closeContact);
+      contactDialog?.addEventListener('close', () => document.body.classList.remove('modal-open'));
+      contactDialog?.addEventListener('click', event => {
+        const rect = contactDialog.getBoundingClientRect();
+        const outside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+        if (outside) closeContact();
+      });
+
+      if (contactForm) {
+        contactForm.addEventListener('submit', async event => {
+          event.preventDefault();
+          const lang = root.dataset.language || 'de';
+          formStatus.className = 'form-status';
+
+          if (!contactForm.checkValidity()) {
+            contactForm.reportValidity();
+            formStatus.textContent = lang === 'de' ? 'Bitte prüfe die markierten Pflichtfelder.' : 'Please check the required fields.';
+            formStatus.classList.add('error');
+            return;
+          }
+
+          const formData = new FormData(contactForm);
+          const payload = Object.fromEntries(formData.entries());
+          if (!payload.turnstile_token) {
+            formStatus.textContent = lang === 'de' ? 'Bitte schließe die Bot-Prüfung ab.' : 'Please complete the bot check.';
+            formStatus.classList.add('error');
+            return;
+          }
+
+          submitButton.disabled = true;
+          formStatus.textContent = lang === 'de' ? 'Nachricht wird sicher übermittelt …' : 'Sending your message securely …';
+
+          try {
+            const response = await fetch('/api/contact', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            const result = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(result.code || 'request_failed');
+
+            contactForm.reset();
+            startedField.value = String(Date.now());
+            if (window.turnstile && turnstileWidgetId !== null) window.turnstile.reset(turnstileWidgetId);
+            formStatus.textContent = lang === 'de' ? 'Nachricht wurde übermittelt. Vielen Dank.' : 'Your message has been sent. Thank you.';
+            formStatus.classList.add('success');
+          } catch (error) {
+            const retry = error.message === 'rate_limited';
+            formStatus.textContent = lang === 'de'
+              ? (retry ? 'Zu viele Anfragen. Bitte versuche es später erneut.' : 'Die Nachricht konnte nicht übermittelt werden. Bitte versuche es später erneut.')
+              : (retry ? 'Too many requests. Please try again later.' : 'The message could not be sent. Please try again later.');
+            formStatus.classList.add('error');
+            if (window.turnstile && turnstileWidgetId !== null) window.turnstile.reset(turnstileWidgetId);
+          } finally {
+            submitButton.disabled = false;
+          }
+        });
+      }
 
       const revealItems = document.querySelectorAll('.reveal');
       if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
