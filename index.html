@@ -8,7 +8,6 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="color-scheme" content="dark" />
   <title>The Leinhos L4yer — Patrick Leinhos</title>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
@@ -215,8 +214,8 @@
             <div id="turnstile-container"></div>
           </div>
           <p class="privacy-note form-field full">
-            <span data-lang-content="de">Mit dem Absenden werden die Angaben zur Bearbeitung der Anfrage per E-Mail übermittelt. Es erfolgt keine zusätzliche Speicherung in einer eigenen Formulardatenbank.</span>
-            <span data-lang-content="en">When submitted, the information is sent by email to process your enquiry. It is not additionally stored in a dedicated form database.</span>
+            <span data-lang-content="de">Zur Spamabwehr wird Cloudflare Turnstile erst beim Öffnen dieses Formulars geladen. Mit dem Absenden werden deine Angaben über Cloudflare und Brevo an mein GMX-Postfach übermittelt. Eine eigene Formulardatenbank wird nicht geführt. Einzelheiten findest du in der <a href="/datenschutz.html">Datenschutzerklärung</a>.</span>
+            <span data-lang-content="en">Cloudflare Turnstile is loaded only after this form is opened to prevent spam. When submitted, your information is transmitted via Cloudflare and Brevo to my GMX mailbox. No separate form database is maintained. See the <a href="/datenschutz.html">privacy policy</a> for details.</span>
           </p>
           <div class="form-actions form-field full">
             <button class="button" type="submit" id="contact-submit"><span data-lang-content="de">Nachricht senden</span><span data-lang-content="en">Send message</span></button>
@@ -237,7 +236,11 @@
   <footer>
     <span>© <span id="year"></span> Patrick Leinhos</span>
     <span>THE LEINHOS L4YER / BUILT WITH INTENT</span>
-    <a href="https://www.linkedin.com/in/patrick-leinhos-77942a231" target="_blank" rel="noopener noreferrer">LINKEDIN ↗</a>
+    <nav class="legal-links" aria-label="Rechtliche Informationen">
+      <a href="/impressum.html"><span data-lang-content="de">Impressum</span><span data-lang-content="en">Legal notice</span></a>
+      <a href="/datenschutz.html"><span data-lang-content="de">Datenschutz</span><span data-lang-content="en">Privacy</span></a>
+      <a href="https://www.linkedin.com/in/patrick-leinhos-77942a231" target="_blank" rel="noopener noreferrer">LINKEDIN ↗</a>
+    </nav>
   </footer>
 
   <script src="/script.js" defer></script>
