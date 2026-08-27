@@ -516,6 +516,8 @@
     .form-field input:focus,
     .form-field textarea:focus { border-color: var(--cyan); outline: 1px solid var(--cyan); outline-offset: 1px; }
     .form-field small, .privacy-note { color: var(--muted); font-size: 0.72rem; }
+    .privacy-note a { color: var(--ice); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+    .privacy-note a:hover { color: var(--cyan); }
     .honeypot { position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
     .turnstile-wrap { min-height: 70px; }
     .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
@@ -553,6 +555,20 @@
     }
     footer a { text-decoration: none; }
     footer a:hover { color: var(--ice); }
+    .legal-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 1rem; }
+
+    .legal-page { width: min(calc(100% - 2rem), 900px); margin: 0 auto; padding: 8rem 0 5rem; }
+    .legal-page h1 { margin-bottom: 1rem; font-size: clamp(3rem, 9vw, 6rem); }
+    .legal-page h2 { margin-top: 3rem; font-size: clamp(1.35rem, 3vw, 2rem); letter-spacing: -0.03em; }
+    .legal-page h3 { margin-top: 2rem; font-size: 1.05rem; }
+    .legal-page p, .legal-page li { color: var(--muted); }
+    .legal-page a { color: var(--ice); }
+    .legal-page a:hover { color: var(--cyan); }
+    .legal-intro { max-width: 720px; font-size: 1.05rem; }
+    .legal-card { margin: 2rem 0; padding: clamp(1.25rem, 4vw, 2rem); border: 1px solid var(--line); background: rgba(13, 29, 48, 0.28); }
+    .legal-card address { color: var(--text); font-style: normal; line-height: 1.8; }
+    .legal-divider { margin: 4rem 0; border: 0; border-top: 1px solid var(--line); }
+    .legal-meta { color: var(--muted); font-family: "Cascadia Code", "Segoe UI Mono", Consolas, monospace; font-size: 0.72rem; }
 
     [data-lang-content] { display: none; }
     html[data-language="de"] [data-lang-content="de"],

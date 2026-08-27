@@ -1,15 +1,18 @@
     (() => {
       const root = document.documentElement;
       const langButtons = document.querySelectorAll('[data-lang]');
+      const pathname = window.location.pathname;
+      const pageKey = pathname.endsWith('/impressum.html') ? 'impressum' : pathname.endsWith('/datenschutz.html') ? 'datenschutz' : 'portfolio';
       const titles = {
-        de: 'The Leinhos L4yer — Patrick Leinhos',
-        en: 'The Leinhos L4yer — Patrick Leinhos'
+        portfolio: { de: 'The Leinhos L4yer — Patrick Leinhos', en: 'The Leinhos L4yer — Patrick Leinhos' },
+        impressum: { de: 'Impressum — The Leinhos L4yer', en: 'Legal notice — The Leinhos L4yer' },
+        datenschutz: { de: 'Datenschutz — The Leinhos L4yer', en: 'Privacy policy — The Leinhos L4yer' }
       };
 
       function setLanguage(lang) {
         root.dataset.language = lang;
         root.lang = lang;
-        document.title = titles[lang];
+        document.title = (titles[pageKey] || titles.portfolio)[lang];
         langButtons.forEach(button => {
           button.setAttribute('aria-pressed', String(button.dataset.lang === lang));
         });
@@ -28,41 +31,58 @@
       const closeContactButton = document.querySelector('[data-close-contact]');
       let turnstileWidgetId = null;
       let turnstileToken = '';
+      let turnstileLoadPromise = null;
+
+      function loadTurnstile() {
+        if (window.turnstile) return Promise.resolve();
+        if (turnstileLoadPromise) return turnstileLoadPromise;
+
+        turnstileLoadPromise = new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+          script.async = true;
+          script.defer = true;
+          script.onload = resolve;
+          script.onerror = () => reject(new Error('turnstile_load_failed'));
+          document.head.appendChild(script);
+        });
+        return turnstileLoadPromise;
+      }
+
+      function renderTurnstile() {
+        if (!window.turnstile || turnstileWidgetId !== null) return;
+        turnstileWidgetId = window.turnstile.render('#turnstile-container', {
+          sitekey: '0x4AAAAAAEXipTWIHWrSI09M',
+          theme: 'dark',
+          action: 'contact',
+          responseField: false,
+          callback: token => {
+            turnstileToken = token;
+            formStatus.textContent = '';
+            formStatus.className = 'form-status';
+          },
+          'expired-callback': () => { turnstileToken = ''; },
+          'error-callback': () => {
+            turnstileToken = '';
+            const lang = root.dataset.language || 'de';
+            formStatus.textContent = lang === 'de' ? 'Die Bot-Prüfung konnte nicht geladen werden.' : 'The bot check could not be loaded.';
+            formStatus.className = 'form-status error';
+          }
+        });
+      }
 
       function openContact() {
         if (!contactDialog || contactDialog.open) return;
         contactDialog.showModal();
         document.body.classList.add('modal-open');
         if (startedField) startedField.value = String(Date.now());
-        const renderTurnstile = () => {
-          if (!window.turnstile || turnstileWidgetId !== null) return false;
-          turnstileWidgetId = window.turnstile.render('#turnstile-container', {
-            sitekey: '0x4AAAAAAEXipTWIHWrSI09M',
-            theme: 'dark',
-            action: 'contact',
-            responseField: false,
-            callback: token => {
-              turnstileToken = token;
-              formStatus.textContent = '';
-              formStatus.className = 'form-status';
-            },
-            'expired-callback': () => { turnstileToken = ''; },
-            'error-callback': () => {
-              turnstileToken = '';
-              const lang = root.dataset.language || 'de';
-              formStatus.textContent = lang === 'de' ? 'Die Bot-Prüfung konnte nicht geladen werden.' : 'The bot check could not be loaded.';
-              formStatus.className = 'form-status error';
-            }
+        loadTurnstile()
+          .then(renderTurnstile)
+          .catch(() => {
+            const lang = root.dataset.language || 'de';
+            formStatus.textContent = lang === 'de' ? 'Die Bot-Prüfung konnte nicht geladen werden. Bitte versuche es später erneut.' : 'The bot check could not be loaded. Please try again later.';
+            formStatus.className = 'form-status error';
           });
-          return true;
-        };
-        if (!renderTurnstile()) {
-          let attempts = 0;
-          const waitForTurnstile = window.setInterval(() => {
-            attempts += 1;
-            if (renderTurnstile() || attempts >= 40) window.clearInterval(waitForTurnstile);
-          }, 100);
-        }
         window.setTimeout(() => document.getElementById('contact-name')?.focus(), 60);
       }
 
