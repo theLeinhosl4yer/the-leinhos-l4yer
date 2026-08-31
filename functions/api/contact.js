@@ -96,20 +96,8 @@ export async function onRequestPost(context) {
     return json(415, { ok: false, code: "invalid_request" });
   }
 
-  const requiredConfig = [
-    "BREVO_API_KEY",
-    "TURNSTILE_SECRET",
-    "CONTACT_RECIPIENT",
-    "CONTACT_SENDER_EMAIL",
-  ];
-  const missingConfig = requiredConfig.filter((name) => !env[name]);
-  if (missingConfig.length) {
-    // Safe diagnostic: expose variable names only, never values.
-    return json(503, {
-      ok: false,
-      code: "service_unavailable",
-      missing: missingConfig,
-    });
+  if (!env.BREVO_API_KEY || !env.TURNSTILE_SECRET || !env.CONTACT_RECIPIENT || !env.CONTACT_SENDER_EMAIL) {
+    return json(503, { ok: false, code: "service_unavailable" });
   }
 
   let data;
